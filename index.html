@@ -26,6 +26,28 @@
     <title>TrainDepot</title>
 </head>
 <body>
-    
+    <div class = "container">
+        <header class = "jumbotron"><h1>Train Depot</h1></header>
+        <div class = "panel panel-default">
+            <div class = "panel-heading">Current Train Schedule</div>
+            <div id = "trainInfo" class = "panel-body"></div>
+        </div>
+        <div class = "panel panel-default">
+            <div class = "panel-heading">Add Train</div>
+            <div class = "panel-body">
+                <form id = "addTrain-form">
+                    <label for = "train-input">Train Name</label>
+                    <input type = "text" id = "train-input" class = "form-control">
+                    <label for = "dest-input">Destination</label>
+                    <input type = "text" id = "dest-input" class = "form-control">
+                    <label for = "time-input">First Train Time (HH:mm - military time)</label>
+                    <input type = "text" id = "time-input" class = "form-control">
+                    <label for = "freq-input">Frequency (min)</label>
+                    <input type = "text" id = "freq-input" class = "form-control">
+                    <input id = "submit-button" class = "btn btn-default set" type = "submit" value = "Submit">
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
