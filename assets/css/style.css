@@ -20,6 +20,14 @@
     color: #17456C;
 }
 
+th, td{
+    text-align: center;
+}
+
+.remove{
+    margin-top: 2px;
+}
+
 .form-control{
     margin-bottom: 10px;
     color: #17456C;
