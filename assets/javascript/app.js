@@ -28,9 +28,11 @@ $(document).ready(function(){
         $("#dest-input").val("");
         $("#time-input").val("");
         $("#freq-input").val("");
+
         database.ref().once("value").then(function(snap){
-            var keys = snap.numChildren();
-            database.ref("/" + (keys + 1)).set({
+            var postsRef = database.ref().child("/trains");
+            var newPostRef = postsRef.push();
+            newPostRef.set({
                 train: trainName,
                 dest: destination,
                 time: firstTrainTime,
@@ -39,37 +41,38 @@ $(document).ready(function(){
         });
     });
 
-    database.ref().on("value", function(shot){
+    database.ref("/trains").on("value", function(shot){
         $("#trainData").empty();
-        if (shot.numChildren() > 0){
-            for (var i = 1; i < (shot.numChildren() + 1); i += 1){
-                var train = shot.val()[i].train;
-                var dest = shot.val()[i].dest;
-                var time = shot.val()[i].time;
-                var freq = shot.val()[i].freq;
 
-                var timeConverted = moment(time, "hh:mm").subtract(1, "years");
-                var timeDifference = moment().diff(moment(timeConverted), "minutes");
-                var remainder = timeDifference % freq;
-                var minutesAway = freq - remainder;
-                var nextArrival = moment().add(minutesAway, "minutes");
+        shot.forEach(function(fbObj) {
+            var currentTrain = fbObj.val();
+            var train = currentTrain.train;
+            var dest = currentTrain.dest;
+            var time = currentTrain.time;
+            var freq = currentTrain.freq;
 
-                var tableRow = $("<tr>");
-                tableRow.attr("id", "row" + i);
-                var trainItem = $("<td>");
-                trainItem.text(train);
-                var destItem = $("<td>");
-                destItem.text(dest);
-                var freqItem = $("<td>");
-                freqItem.text(freq);
-                var min = $("<td>");
-                min.text(minutesAway);
-                var next = $("<td>");
-                next.text(moment(nextArrival).format("hh:mm A"));
+            var timeConverted = moment(time, "hh:mm").subtract(1, "years");
+            var timeDifference = moment().diff(moment(timeConverted), "minutes");
+            var remainder = timeDifference % freq;
+            var minutesAway = freq - remainder;
+            var nextArrival = moment().add(minutesAway, "minutes");
 
-                tableRow.append(trainItem, destItem, freqItem, next, min);
-                $("#trainData").prepend(tableRow);
-            };
-        }
+            var tableRow = $("<tr>");
+            tableRow.attr("id", "row" + fbObj.key);
+            var trainItem = $("<td>");
+            trainItem.text(train);
+            var destItem = $("<td>");
+            destItem.text(dest);
+            var freqItem = $("<td>");
+            freqItem.text(freq);
+            var min = $("<td>");
+            min.text(minutesAway);
+            var next = $("<td>");
+            next.text(moment(nextArrival).format("hh:mm A"));
+
+            tableRow.append(trainItem, destItem, freqItem, next, min);
+            $("#trainData").prepend(tableRow);
+        })
+
     })
 });
